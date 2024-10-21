@@ -12,15 +12,3 @@ Open the "DockerMiniApps" directory and write:
 
 Then go to <a href="http://localhost:8002/">http://localhost:8002/</a>
 
-<script>
-function copyToClipboard(elementId) {
-  var text = document.getElementById(elementId).innerText;
-  var textArea = document.createElement("textarea");
-  textArea.value = text;
-  document.body.appendChild(textArea);
-  textArea.select();
-  document.execCommand("Copy");
-  textArea.remove();
-  alert("Copied to clipboard: " + text);
-}
-</script>

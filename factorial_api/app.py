@@ -15,13 +15,13 @@ def factorial(n: int) -> int:
 class NumberRequest(BaseModel):
     number: int
 
-@app.post("/factorial/")
-async def get_factorial(request: NumberRequest):
+@app.get("/factorial/{number}")
+async def get_factorial(number: int):
     try:
-        result = factorial(request.number)
-        return {"number": request.number, "factorial": result}
+        result = factorial(number)
+        return {"factorial": result}
     except ValueError as e:
-        return {"error": str(e), "number": request.number}
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.exception_handler(ValidationError)
 async def validation_exception_handler(request: Request, exc: ValidationError):

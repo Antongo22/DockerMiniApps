@@ -5,8 +5,7 @@ import uvicorn
 
 app = FastAPI()
 
-FIBONACCI_API_URL = "http://localhost:8001/fibonacci/"
-
+FIBONACCI_API_URL = "http://fibonacci_api:8001/fibonacci/"
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
@@ -28,7 +27,7 @@ async def index():
 @app.get("/calculate", response_class=HTMLResponse)
 async def calculate(index: int):
     try:
-        response = requests.post(FIBONACCI_API_URL, json={"index": index})
+        response = requests.get(f"{FIBONACCI_API_URL}{index}")
         
         if response.status_code != 200:
             raise HTTPException(status_code=500, detail="Ошибка при вызове API Фибоначчи.")

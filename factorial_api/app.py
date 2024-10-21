@@ -6,7 +6,7 @@ app = FastAPI()
 
 def factorial(n: int) -> int:
     if n < 0:
-        raise ValueError("Факториал определён только для неотрицательных чисел.")
+        raise ValueError("Factorial is defined only for non-negative integers.")
     result = 1
     for i in range(2, n + 1):
         result *= i
@@ -25,7 +25,7 @@ async def get_factorial(number: int):
 
 @app.exception_handler(ValidationError)
 async def validation_exception_handler(request: Request, exc: ValidationError):
-    return {"error": "Неверные данные. Убедитесь, что передано целое число."}
+    return {"error": "Invalid data. Ensure that an integer is passed."}
 
 if __name__ == "__main__":
     import sys

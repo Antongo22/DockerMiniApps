@@ -6,14 +6,14 @@ app = FastAPI()
 
 def fibonacci(n: int) -> int:
     if n < 0:
-        raise ValueError("Число Фибоначчи определено только для неотрицательных чисел.")
+        raise ValueError("Fibonacci number is defined only for non-negative integers.")
     a, b = 0, 1
     for _ in range(n):
         a, b = b, a + b
     return a
 
 @app.get("/fibonacci/{index}")
-async def get_fibonacci(index: int = Path(..., description="Индекс числа Фибоначчи")):
+async def get_fibonacci(index: int = Path(..., description="Index of the Fibonacci number")):
     try:
         fib_value = fibonacci(index)
         FACTORIAL_API_URL = f"http://factorial_api:8000/factorial/{fib_value}"
@@ -27,7 +27,7 @@ async def get_fibonacci(index: int = Path(..., description="Индекс чис�
                 "factorial_response": factorial_response
             }
         else:
-            return {"error": "Ошибка при обращении к API факториала.", "details": response.json()}
+            return {"error": "Error accessing factorial API.", "details": response.json()}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

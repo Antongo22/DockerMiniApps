@@ -12,13 +12,13 @@ async def index():
     return """
     <html>
         <head>
-            <title>Число Фибоначчи и Факториал</title>
+            <title>Fibonacci and Factorial</title>
         </head>
         <body style="background-color: #2d2d2d; color: white; font-family: Arial;">
-            <h1>Введите индекс для числа Фибоначчи</h1>
+            <h1>Enter the index for the Fibonacci number</h1>
             <form action="/calculate" method="get">
                 <input type="number" name="index" min="0" required>
-                <button type="submit">Вычислить</button>
+                <button type="submit">Calculate</button>
             </form>
         </body>
     </html>
@@ -30,7 +30,7 @@ async def calculate(index: int):
         response = requests.get(f"{FIBONACCI_API_URL}{index}")
         
         if response.status_code != 200:
-            raise HTTPException(status_code=500, detail="Ошибка при вызове API Фибоначчи.")
+            raise HTTPException(status_code=500, detail="Error calling Fibonacci API.")
 
         result = response.json()
 
@@ -40,13 +40,13 @@ async def calculate(index: int):
         return f"""
         <html>
             <head>
-                <title>Результат вычислений</title>
+                <title>Calculation Result</title>
             </head>
             <body style="background-color: #2d2d2d; color: white; font-family: Arial;">
-                <h1>Результат</h1>
-                <p>Число Фибоначчи: <b>{fibonacci_value}</b></p>
-                <p>Факториал этого числа: <b>{factorial_value}</b></p>
-                <a href="/">Назад</a>
+                <h1>Result</h1>
+                <p>Fibonacci number: <b>{fibonacci_value}</b></p>
+                <p>Factorial of this number: <b>{factorial_value}</b></p>
+                <a href="/">Back</a>
             </body>
         </html>
         """
@@ -54,9 +54,9 @@ async def calculate(index: int):
         return f"""
         <html>
             <body style="background-color: #2d2d2d; color: red; font-family: Arial;">
-                <h1>Ошибка</h1>
+                <h1>Error</h1>
                 <p>{str(e)}</p>
-                <a href="/">Назад</a>
+                <a href="/">Back</a>
             </body>
         </html>
         """

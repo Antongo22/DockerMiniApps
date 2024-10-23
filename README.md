@@ -11,3 +11,6 @@ Open the "DockerMiniApps" directory and write the following command in your term
 <pre><code id="build-command" class="language-bash">docker-compose up --build</code></pre>
 
 Then go to <a href="http://localhost:8002/">http://localhost:8002/</a>
+
+<br>
+If you want, you can change the ports and api in the "docker-compose.yml" file

@@ -18,9 +18,26 @@ async def index():
         <body style="background-color: #2d2d2d; color: white; font-family: Arial;">
             <h1>Enter the index for the Fibonacci number</h1>
             <form action="/calculate" method="post">
-                <input type="number" name="index" min="0" required>
+                <input type="number" name="index" id="indexInput" min="0" required>
+                <label>
+                    <input type="checkbox" id="noLimit" onclick="toggleInputType()"> Remove input restrictions
+                </label>
                 <button type="submit">Calculate</button>
             </form>
+            <script>
+                function toggleInputType() {
+                    const indexInput = document.getElementById('indexInput');
+                    if (document.getElementById('noLimit').checked) {
+                        indexInput.type = 'text';
+                        indexInput.setAttribute('placeholder', 'Any input allowed');
+                        indexInput.value = ''; 
+                    } else {
+                        indexInput.type = 'number';
+                        indexInput.setAttribute('min', '0');
+                        indexInput.setAttribute('placeholder', 'Only non-negative numbers');
+                    }
+                }
+            </script>
         </body>
     </html>
     """
@@ -28,9 +45,14 @@ async def index():
 @app.post("/calculate", response_class=HTMLResponse)
 async def calculate(request: Request):
     data = await request.form()
-    index = int(data.get("index"))
+    index_input = data.get("index")
 
     try:
+        if index_input.isdigit() or (index_input.startswith('-') and index_input[1:].isdigit()):
+            index = int(index_input)
+        else:
+            raise ValueError("Invalid input: Please enter a valid non-negative integer.")
+
         response = requests.post(FIBONACCI_API_URL, json={"index": index})
 
         if response.status_code != 200:

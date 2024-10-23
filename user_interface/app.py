@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 import requests
@@ -5,7 +6,7 @@ import uvicorn
 
 app = FastAPI()
 
-FIBONACCI_API_URL = "http://fibonacci_api:8001/fibonacci/"
+FIBONACCI_API_URL = os.getenv("FIBONACCI_API_URL", "http://fibonacci_api:8001/fibonacci/")
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
@@ -36,7 +37,6 @@ async def calculate(request: Request):
             raise HTTPException(status_code=500, detail="Error calling Fibonacci API.")
 
         result = response.json()
-
         fibonacci_value = result["fibonacci"]
         factorial_value = result["factorial_response"]["factorial"]
 

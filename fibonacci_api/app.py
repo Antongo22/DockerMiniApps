@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import requests
@@ -7,6 +8,8 @@ app = FastAPI()
 
 class FibonacciRequest(BaseModel):
     index: int
+
+FACTORIAL_API_URL = os.getenv("FACTORIAL_API_URL", "http://factorial_api:8000/factorial/")
 
 def fibonacci(n: int) -> int:
     if n < 0:
@@ -20,7 +23,6 @@ def fibonacci(n: int) -> int:
 async def get_fibonacci(fib_request: FibonacciRequest):
     try:
         fib_value = fibonacci(fib_request.index)
-        FACTORIAL_API_URL = "http://factorial_api:8000/factorial/"
         response = requests.post(FACTORIAL_API_URL, json={"number": fib_value})
 
         if response.status_code == 200:

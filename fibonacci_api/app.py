@@ -23,7 +23,7 @@ def fibonacci(n: int) -> int:
 async def get_fibonacci(fib_request: FibonacciRequest):
     try:
         fib_value = fibonacci(fib_request.index)
-        response = requests.post(FACTORIAL_API_URL, json={"number": fib_value})
+        response = requests.post(FACTORIAL_API_URL, json={"number": fib_request.index})
 
         if response.status_code == 200:
             factorial_response = response.json()

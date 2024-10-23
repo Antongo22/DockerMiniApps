@@ -7,6 +7,7 @@ import uvicorn
 app = FastAPI()
 
 FIBONACCI_API_URL = os.getenv("FIBONACCI_API_URL", "http://fibonacci_api:8001/fibonacci/")
+MAX_INDEX = 1480  # Set the maximum index limit
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
@@ -18,7 +19,7 @@ async def index():
         <body style="background-color: #2d2d2d; color: white; font-family: Arial;">
             <h1>Enter the index for the Fibonacci number</h1>
             <form id="fibonacciForm">
-                <input type="number" name="index" id="indexInput" min="0" required>
+                <input type="number" name="index" id="indexInput" min="0" max="1480" required>
                 <label>
                     <input type="checkbox" id="noLimit" onclick="toggleInputType()"> Remove input restrictions
                 </label>
@@ -35,7 +36,8 @@ async def index():
                     } else {
                         indexInput.type = 'number';
                         indexInput.setAttribute('min', '0');
-                        indexInput.setAttribute('placeholder', 'Only non-negative numbers');
+                        indexInput.setAttribute('max', '1480');
+                        indexInput.setAttribute('placeholder', 'Only non-negative numbers (max 1480)');
                     }
                 }
 
@@ -80,6 +82,9 @@ async def calculate(request: Request):
             index = int(index_input)
         else:
             raise ValueError("Invalid input: Please enter a valid non-negative integer.")
+        
+        if index > MAX_INDEX:
+            raise ValueError(f"Input exceeds maximum limit. Please enter a number less than or equal to {MAX_INDEX}.")
 
         response = requests.post(FIBONACCI_API_URL, json={"index": index})
 

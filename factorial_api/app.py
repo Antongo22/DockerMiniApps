@@ -1,8 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel, ValidationError
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 import uvicorn
 
 app = FastAPI()
+
+class FactorialRequest(BaseModel):
+    number: int
 
 def factorial(n: int) -> int:
     if n < 0:
@@ -12,23 +15,15 @@ def factorial(n: int) -> int:
         result *= i
     return result
 
-class NumberRequest(BaseModel):
-    number: int
-
-@app.get("/factorial/{number}")
-async def get_factorial(number: int):
+@app.post("/factorial/")
+async def get_factorial(factorial_request: FactorialRequest):
     try:
-        result = factorial(number)
+        result = factorial(factorial_request.number)
         return {"factorial": result}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.exception_handler(ValidationError)
-async def validation_exception_handler(request: Request, exc: ValidationError):
-    return {"error": "Invalid data. Ensure that an integer is passed."}
-
 if __name__ == "__main__":
     import sys
-
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
     uvicorn.run(app, host="0.0.0.0", port=port)

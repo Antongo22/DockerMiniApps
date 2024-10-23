@@ -16,7 +16,7 @@ async def index():
         </head>
         <body style="background-color: #2d2d2d; color: white; font-family: Arial;">
             <h1>Enter the index for the Fibonacci number</h1>
-            <form action="/calculate" method="get">
+            <form action="/calculate" method="post">
                 <input type="number" name="index" min="0" required>
                 <button type="submit">Calculate</button>
             </form>
@@ -24,11 +24,14 @@ async def index():
     </html>
     """
 
-@app.get("/calculate", response_class=HTMLResponse)
-async def calculate(index: int):
+@app.post("/calculate", response_class=HTMLResponse)
+async def calculate(request: Request):
+    data = await request.form()
+    index = int(data.get("index"))
+
     try:
-        response = requests.get(f"{FIBONACCI_API_URL}{index}")
-        
+        response = requests.post(FIBONACCI_API_URL, json={"index": index})
+
         if response.status_code != 200:
             raise HTTPException(status_code=500, detail="Error calling Fibonacci API.")
 

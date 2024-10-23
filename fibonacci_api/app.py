@@ -1,8 +1,12 @@
-from fastapi import FastAPI, HTTPException, Path
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 import requests
 import uvicorn
 
 app = FastAPI()
+
+class FibonacciRequest(BaseModel):
+    index: int
 
 def fibonacci(n: int) -> int:
     if n < 0:
@@ -12,13 +16,12 @@ def fibonacci(n: int) -> int:
         a, b = b, a + b
     return a
 
-@app.get("/fibonacci/{index}")
-async def get_fibonacci(index: int = Path(..., description="Index of the Fibonacci number")):
+@app.post("/fibonacci/")
+async def get_fibonacci(fib_request: FibonacciRequest):
     try:
-        fib_value = fibonacci(index)
-        FACTORIAL_API_URL = f"http://factorial_api:8000/factorial/{fib_value}"
-
-        response = requests.get(FACTORIAL_API_URL)
+        fib_value = fibonacci(fib_request.index)
+        FACTORIAL_API_URL = "http://factorial_api:8000/factorial/"
+        response = requests.post(FACTORIAL_API_URL, json={"number": fib_value})
 
         if response.status_code == 200:
             factorial_response = response.json()
